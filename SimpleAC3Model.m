@@ -1,4 +1,4 @@
-clear all
+function SimpleAC3Model
 cAMP(1) = .1*10^-6;
 CNG(1) = .1*10^-6;
 Ca(1) = .1*10^-6;
@@ -30,15 +30,21 @@ end
 
 subplot(5,1,1)
 plot(0:.01:50,cAMP)
+title('[cAMP] vs. t')
 
 subplot(5,1,2)
 plot(0:.01:50,CNG)
+title('[CNG] vs. t')
 
 subplot(5,1,3)
 plot(0:.01:50,Ca)
+title('[Ca] vs. t')
 
 subplot(5,1,4)
 plot(0:.01:50,CaBP)
+title('[CaBP] vs. t')
 
 subplot(5,1,5)
 plot(0:.01:50,CaCaM)
+title('[CaCaM] vs. t')
+end
