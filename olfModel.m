@@ -1,8 +1,8 @@
-function output = olfModel(~,input)
+function output = olfModel(time,input)
 
     global od rc os os2 pka AKmax ak2 PKmax pk2 go rg rg2 ac a ckk A3max A2max...
     ca apd PDmax cng CNmax cn2 cam cc cc2 CMmax ifa ef cac CLmax...
-    cl2 cpd CPmax cp2 CDmax CKmax ck2 K1 K2 K3 N1 N2 N3;
+    cl2 cpd CPmax cp2 CDmax CKmax ck2 K1 K2 K3 N1 N2 N3 tempHold;
     
     %Setting concentrations
     x = input(1); %concentration of active CNG channels
@@ -18,6 +18,23 @@ function output = olfModel(~,input)
     o = input(11); %concentration of CAM-PDE
     n = input(12); %concentration of active CAM-kinase II
     
+    %Setting duration of odorant exposure (starts at time = 0), controls
+    %pulse width of odorant exposure and number of exposures 
+    duration = 0.25; %seconds
+    numberOfRepeats = 1;
+    delay = 0; %seconds
+    for i = 1:numberOfRepeats
+       if time <= duration
+           od = tempHold; %constant from global variable
+           break;
+       elseif (duration*i + delay) <= time &&  time <= (duration*i+2*delay) 
+           od = tempHold;
+           break;
+       else
+           od = 0;
+       end
+    end
+    
     %Initializing Variables
     io = cpd-o; %concentration of inactive CAM-PDE
     in = ckk-n; %concentration of inactive CAM-KINASE II
@@ -26,7 +43,7 @@ function output = olfModel(~,input)
     iy = cac-y; %concentration of inactive Ca-Cl channels
     iw = go-w; % concentration of inactive Golf
     urc = rc-z-r; %concentration of unbound receptors 
-    uod = od-z-r; %concentration of unbound oderants 
+    uod = abs(od-z-r); %concentration of unbound oderants 
     is = pka-s; %concentration of inactive PKA
     cd = CDmax*o; %rate of cAMP hydrolysis by CAM-PDE
     cp = CPmax*p; %rate of CAM-PDE activation by Ca4CAM

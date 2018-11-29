@@ -1,5 +1,6 @@
 clc; clear; close all;
 
+%%Olfactory System
 IC = zeros(1,12);
 odorantsConc = logspace(-2,4,20);
 timeCell = cell(1, length(odorantsConc));
@@ -7,7 +8,7 @@ outputHolder = cell(1, length(odorantsConc));
 
 global od rc os os2 pka AKmax ak2 PKmax pk2 go rg rg2 ac a ckk A3max A2max...
     ca apd PDmax cng CNmax cn2 cam cc cc2 CMmax ifa ef cac CLmax...
-    cl2 cpd CPmax cp2 CDmax CKmax ck2 K1 K2 K3 N1 N2 N3;
+    cl2 cpd CPmax cp2 CDmax CKmax ck2 K1 K2 K3 N1 N2 N3 tempHold;
 
 %Initializing global variables
 rc = 1.0; %concentration of receptor
@@ -68,10 +69,11 @@ IC(10) = 0.001; %p
 IC(11) = 0.001; %o
 IC(12) = 0.001; %n
 
-time = 25; %seconds
+time = 10; %seconds
 for i = 1:length(odorantsConc)
     od = odorantsConc(i); %concentration of odorants (VARIABLE ALONG WITH TIME EXPOSED)
-    [t, yd] = ode45('olfModel', [0 time], IC);
+    tempHold = od;
+    [t, yd] = ode45('olfModel', [0:0.001:time], IC);
     outputHolder{i} = yd;
     timeCell{i} = t;
 end
@@ -83,7 +85,7 @@ for i = 1:length(outputHolder)
 end
 xlabel('time (sec)')
 ylabel('Active CNG channels (\muM)')
-title('Concentration of active CNG channels over time')
+title('Concentration of active CNG channels over time for varying odorant conc')
 legend(['=' num2str(odorantsConc(1)) '\muM'], ['=' num2str(odorantsConc(2)) '\muM'], ...
     ['=' num2str(odorantsConc(3)) '\muM'], ['=' num2str(odorantsConc(4)) '\muM'], ...
     ['=' num2str(odorantsConc(5)) '\muM'], ['=' num2str(odorantsConc(6)) '\muM'], ...
@@ -102,7 +104,7 @@ for i = 1:length(outputHolder)
 end
 xlabel('time (sec)')
 ylabel('cAMP (\muM)')
-title('Concentration of cAMP over time')
+title('Concentration of cAMP over time for varying odorant conc')
 legend(['=' num2str(odorantsConc(1)) '\muM'], ['=' num2str(odorantsConc(2)) '\muM'], ...
     ['=' num2str(odorantsConc(3)) '\muM'], ['=' num2str(odorantsConc(4)) '\muM'], ...
     ['=' num2str(odorantsConc(5)) '\muM'], ['=' num2str(odorantsConc(6)) '\muM'], ...
@@ -121,7 +123,7 @@ for i = 1:length(outputHolder)
 end
 xlabel('time (sec)')
 ylabel('Ca2+ concentration (\muM)')
-title('Concentration of active Ca2+ ions over time')
+title('Concentration of active Ca2+ ions over time for varying odorant conc')
 legend(['=' num2str(odorantsConc(1)) '\muM'], ['=' num2str(odorantsConc(2)) '\muM'], ...
     ['=' num2str(odorantsConc(3)) '\muM'], ['=' num2str(odorantsConc(4)) '\muM'], ...
     ['=' num2str(odorantsConc(5)) '\muM'], ['=' num2str(odorantsConc(6)) '\muM'], ...
@@ -132,3 +134,35 @@ legend(['=' num2str(odorantsConc(1)) '\muM'], ['=' num2str(odorantsConc(2)) '\mu
     ['=' num2str(odorantsConc(15)) '\muM'], ['=' num2str(odorantsConc(16)) '\muM'], ...
     ['=' num2str(odorantsConc(17)) '\muM'], ['=' num2str(odorantsConc(18)) '\muM'], ...
     ['=' num2str(odorantsConc(19)) '\muM'], ['=' num2str(odorantsConc(20)) '\muM']);
+
+figure(4)
+maxValue = zeros(3, length(odorantsConc));
+types = [1 6 9];
+for i = 1:length(types)
+    for j = 1:length(outputHolder)
+        maxValue(i, j) = max(outputHolder{j}(:,types(i)));
+    end
+    semilogx(odorantsConc, maxValue(i, :), '*-');
+    hold on
+end
+xlabel('Odorant Concentration (\mum)')
+ylabel('Molecular concentration (\muM)')
+title('Maximum values of Conc vs Odorant Conc')
+
+%%Action Potential system
+CaCharge = 2/(6.25*10^18); %Charge (Coulombs) for each Ca2+ ion
+Iapp = outputHolder{20}(:,9)*CaCharge*10^23; %per molecule and area 
+Iapp = [0 diff(Iapp)']; %current = dq/dt
+%optimizing current
+for i = 1:length(Iapp)
+    if Iapp(i) < 0
+        Iapp(i) = 0;
+    end
+end
+    
+[t, yd] = actionPotential(timeCell{20}(end)*100, timeCell{20}, Iapp);
+figure(5)
+plot(t, yd)
+xlabel('Time (ms)')
+ylabel('Membrane Voltage (mV)')
+title('Action Potential graph over time of neurons ')
