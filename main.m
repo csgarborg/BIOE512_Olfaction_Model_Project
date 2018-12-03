@@ -231,53 +231,53 @@ title('Maximum values of Conc vs Odorant Conc')
 % %on page 10/14. 
 % % freq = zeros(1,7);
 % 
-% % figure(5)
-% % for i = 1:4   
-% %     subplot(2,2,i)
-% %     %Iapp = (1 - outputHolder{i}(:,9))*(8*(1-outputHolder{i}(:,9)));
-% % %     Iapp = (outputHolder{i}(:,1) + outputHolder{i}(:,2))*80;
-% %     Iapp = 50;
-% %     [t, yd] = actionPotential(1000, 10, Iapp);
-% %     freq(i) = freqCounter(yd, t, -50);
-% %     plot(t, yd)
-% %     xlabel('Time (ms)')
-% %     ylabel('Membrane Voltage (mV)')
-% % end
-% % 
-% % figure(6)
-% % % Iapp = (outputHolder{5}(:,1) + outputHolder{5}(:,2))*80;
-% % for i = 5:7   
-% %     subplot(2,2,(i-4))
-% %     Iapp = (outputHolder{i}(:,1) + outputHolder{i}(:,2))*(80);
-% %     [t, yd] = actionPotential(timeCell{end}(end)*100, timeCell{end}, Iapp);
-% %     freq(i) = freqCounter(yd, t, -50);
-% %     plot(t, yd)
-% %     xlabel('Time (ms)')
-% %     ylabel('Membrane Voltage (mV)')
-% % end
-% % 
-% % function output = freqCounter(Iapp, timeCell, threshold)
-% %    pass = 0;
-% %    startTime = 0;
-% %    endTime = 0;
-% %    width = 0;
-% %    count = 1;
-% %     for i = 1:length(Iapp)
-% %        if Iapp(i) > threshold && pass == 0
-% %            startTime = timeCell(i);
-% %            pass = 1;
-% %        end
-% %        if Iapp(i) < threshold && pass == 1
-% %            endTime = timeCell(i);
-% %            pass = 0;
-% %        end
-% %        if startTime ~= 0 && endTime ~= 0
-% %             width(count) = endTime - startTime;
-% %             endTime = 0;
-% %             startTime = 0;
-% %             count = count + 1;
-% %        end
-% %     end
-% %     width = 1000./width;
-% %     output = mean(width);
-% % end
+figure(5)
+for i = 1:4   
+    subplot(2,2,i)
+    %Iapp = (1 - outputHolder{i}(:,9))*(8*(1-outputHolder{i}(:,9)));
+    Iapp = (outputHolder{i}(:,1) + outputHolder{i}(:,2))*80;
+%     Iapp = 50;
+    [t, yd] = actionPotential(timeCell{end}(end)*100, timeCell{end}, Iapp);
+    freq(i) = freqCounter(yd, t, -50);
+    plot(t, yd)
+    xlabel('Time (ms)')
+    ylabel('Membrane Voltage (mV)')
+end
+
+figure(6)
+% Iapp = (outputHolder{5}(:,1) + outputHolder{5}(:,2))*80;
+for i = 5:7   
+    subplot(2,2,(i-4))
+    Iapp = (outputHolder{i}(:,1) + outputHolder{i}(:,2))*(80);
+    [t, yd] = actionPotential(timeCell{end}(end)*100, timeCell{end}, Iapp);
+    freq(i) = freqCounter(yd, t, -50);
+    plot(t, yd)
+    xlabel('Time (ms)')
+    ylabel('Membrane Voltage (mV)')
+end
+
+function output = freqCounter(Iapp, timeCell, threshold)
+   pass = 0;
+   startTime = 0;
+   endTime = 0;
+   width = 0;
+   count = 1;
+    for i = 1:length(Iapp)
+       if Iapp(i) > threshold && pass == 0
+           startTime = timeCell(i);
+           pass = 1;
+       end
+       if Iapp(i) < threshold && pass == 1
+           endTime = timeCell(i);
+           pass = 0;
+       end
+       if startTime ~= 0 && endTime ~= 0
+            width(count) = endTime - startTime;
+            endTime = 0;
+            startTime = 0;
+            count = count + 1;
+       end
+    end
+    width = 1000./width;
+    output = mean(width);
+end
