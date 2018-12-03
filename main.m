@@ -110,8 +110,8 @@ for i = 1:length(outputHolder)
     hold on
 end
 xlabel('time (sec)')
-ylabel('Ca2+ concentration (\muM)')
-title('Concentration of active Ca2+ ions over time for varying odorant conc')
+ylabel('Ca^{2+} concentration (\muM)')
+title('Concentration of active Ca^{2+} ions over time for varying odorant conc')
 legend(['=' num2str(odorantsConc(1)) '\muM'], ['=' num2str(odorantsConc(2)) '\muM'], ...
     ['=' num2str(odorantsConc(3)) '\muM'], ['=' num2str(odorantsConc(4)) '\muM'], ...
     ['=' num2str(odorantsConc(5)) '\muM'], ['=' num2str(odorantsConc(6)) '\muM'], ...
@@ -254,6 +254,32 @@ for i = 5:7
     plot(t, yd)
     xlabel('Time (ms)')
     ylabel('Membrane Voltage (mV)')
+end
+
+figure(7)
+ind = 1;
+for i = [1 2 3 7]
+    timeInd = timeCell{i} <= 5;
+    times = timeCell{i}(timeInd);
+    subplot(2,2,ind)
+    for j = [6 1 9]
+        plot(times,outputHolder{i}(timeInd,j));
+        hold on
+    end
+    xlabel('Time (sec)')
+    ylabel('Concentration (\muM)')
+    title(['Concentrations vs Time when Oderant Concentration = ' num2str(odorantsConc(i)) '\muM'])
+    if ind == 1
+        legend({'cAMP','CNG Channels','Ca^{2+}'},'Location','northwest','AutoUpdate','off')
+    else
+        legend({'cAMP','CNG Channels','Ca^{2+}'},'AutoUpdate','off')
+    end
+    for j = [6 1 9]
+        [pks,locs] = findpeaks(outputHolder{i}(:,j));
+        plot([timeCell{i}(locs(1)),timeCell{i}(locs(1))],[0 pks(1)],'k:');
+        hold on
+    end
+    ind = ind + 1;
 end
 
 function output = freqCounter(Iapp, timeCell, threshold)
