@@ -8,10 +8,11 @@ function [timeOutput, APOutput] = actionPotential(simulationTime, orgTime, curre
     E_Na=115;
     E_L=10.6;
     C=1;
+    currentLevels = current;
     
     deltaT = 0.01;
     t=0:deltaT:simulationTime;
-    I = zeros(1, length(t));
+    I(1:500) = currentLevels; I(501:2000) = 50; I(2001:numel(t)) = 50;
     
     V=0; %Baseline voltage
     alpha_n = .01 * ( (10-V) / (exp((10-V)/10)-1) ); %Potassium Channel gate
@@ -35,7 +36,8 @@ function [timeOutput, APOutput] = actionPotential(simulationTime, orgTime, curre
         beta_h(i) = 1/(exp((30-V(i))/10)+1);
         
         %calculate the currents
-        I(i) = interp1(orgTime, current, t(i)/100);
+%         I(i) = interp1(orgTime, current, t(i)/100);
+        I(i) = 50;
         I_Na = (m(i)^3) * gbar_Na * h(i) * (V(i)-E_Na); 
         I_K = (n(i)^4) * gbar_K * (V(i)-E_K); 
         I_L = g_L *(V(i)-E_L); 

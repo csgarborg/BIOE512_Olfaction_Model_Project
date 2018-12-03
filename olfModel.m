@@ -20,6 +20,9 @@ function output = olfModel(time,input)
     
     %Setting duration of odorant exposure (starts at time = 0), controls
     %pulse width of odorant exposure and number of exposures 
+    
+    %%BRANDON AND MADI LOOK HERE RIGHT NOW FOR THE PULSE WIDTH AND DURATION
+    %%OR YOU GUYS ARE BLIND
     duration = 10;%seconds
     numberOfRepeats = 1;
     delay = 0; %seconds
