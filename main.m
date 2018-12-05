@@ -281,31 +281,31 @@ for i = 5:7
 end
 
 
-% figure(7)
-% ind = 1;
-% for i = [1 2 3 7]
-%     timeInd = timeCell{i} <= 5;
-%     times = timeCell{i}(timeInd);
-%     subplot(2,2,ind)
-%     for j = [6 1 9]
-%         plot(times,outputHolder{i}(timeInd,j));
-%         hold on
-%     end
-%     xlabel('Time (sec)')
-%     ylabel('Concentration (\muM)')
-%     title(['Concentrations vs Time when Oderant Concentration = ' num2str(odorantsConc(i)) '\muM'])
-%     if ind == 1
-%         legend({'cAMP','CNG Channels','Ca^{2+}'},'Location','northwest','AutoUpdate','off')
-%     else
-%         legend({'cAMP','CNG Channels','Ca^{2+}'},'AutoUpdate','off')
-%     end
-%     for j = [6 1 9]
-%         [pks,locs] = findpeaks(outputHolder{i}(:,j));
-%         plot([timeCell{i}(locs(1)),timeCell{i}(locs(1))],[0 pks(1)],'k:');
-%         hold on
-%     end
-%     ind = ind + 1;
-% end
+figure(9)
+ind = 1;
+for i = [1 2 3 7]
+    timeInd = timeCell{i} <= 5;
+    times = timeCell{i}(timeInd);
+    subplot(2,2,ind)
+    for j = [6 1 9]
+        plot(times,outputHolder{i}(timeInd,j));
+        hold on
+    end
+    xlabel('Time (sec)')
+    ylabel('Concentration (\muM)')
+    title(['Concentrations vs Time when Oderant Concentration = ' num2str(odorantsConc(i)) '\muM'])
+    if ind == 1
+        legend({'cAMP','CNG Channels','Ca^{2+}'},'Location','northwest','AutoUpdate','off')
+    else
+        legend({'cAMP','CNG Channels','Ca^{2+}'},'AutoUpdate','off')
+    end
+    for j = [6 1 9]
+        [pks,locs] = findpeaks(outputHolder{i}(:,j));
+        plot([timeCell{i}(locs(1)),timeCell{i}(locs(1))],[0 pks(1)],'k:');
+        hold on
+    end
+    ind = ind + 1;
+end
 
 function output = freqCounter(Iapp, timeCell, threshold)
    pass = 0;
