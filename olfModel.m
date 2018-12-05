@@ -23,9 +23,9 @@ function output = olfModel(time,input)
     
     %%BRANDON AND MADI LOOK HERE RIGHT NOW FOR THE PULSE WIDTH AND DURATION
     %%OR YOU GUYS ARE BLIND
-    duration = 10;%seconds
-    numberOfRepeats = 1;
-    delay = 0; %seconds
+    duration = 0.25;%seconds
+    numberOfRepeats = 2;
+    delay = 8; %seconds
     for i = 1:numberOfRepeats
        if time <= duration
            od = tempHold; %constant from global variable

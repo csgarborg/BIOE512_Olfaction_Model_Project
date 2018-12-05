@@ -1,4 +1,4 @@
-function [timeOutput, APOutput] = actionPotential(simulationTime, orgTime, current)
+function [timeOutput, APOutput, gbar_K, gbar_Na, m, h, n] = actionPotential(simulationTime, orgTime, current)
  
     %Initializing variables and resting voltages for ions
     gbar_K=36; 
